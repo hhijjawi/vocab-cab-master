@@ -15,17 +15,11 @@ import java.util.ArrayList;
  * Created by Hisham on 10/5/2015.
  */
 public class getWordsAndDefinitionsTask extends AsyncTask {
-        ProgressDialog pd;
-        Context callingActivity;
-
-    static ArrayList<String> wordsList= new ArrayList<String>();
-    static ArrayList<String> definitionsList= new ArrayList<String>();
-    static ArrayList<ArrayList<String>> wordsAndDefs= new ArrayList<ArrayList<String>>();
-
-    public getWordsAndDefinitionsTask(Context context) {
-        this.pd = new ProgressDialog(context);
-        this.callingActivity=context;
-    }
+    ArrayList<String> wordsList = new ArrayList<String>();
+    ArrayList<String> definitionsList = new ArrayList<String>();
+    ArrayList<ArrayList<String>> wordsAndDefs = new ArrayList<ArrayList<String>>();
+    ProgressDialog pd;
+    Context callingActivity;
 
     @Override
     protected void onPreExecute() {
@@ -34,53 +28,44 @@ public class getWordsAndDefinitionsTask extends AsyncTask {
         pd.show();
     }
 
-    public static ArrayList<String> getWordsList() {
-        return wordsList;
-    }
-
-    public static ArrayList<String> getDefinitionsList() {
-        return definitionsList;
-    }
-
-
-
-
     @Override
     protected Object doInBackground(Object[] params) {
-        final Activity currentContext=(Activity)callingActivity;
-        Runnable prepDialogueOnUIThread=new Runnable() {
+        final Activity currentContext = (Activity) callingActivity;
+        Runnable prepDialogueOnUIThread = new Runnable() {
             @Override
-                    public void run() {
+            public void run() {
 
 
             }
         };
         currentContext.runOnUiThread(prepDialogueOnUIThread);
-
-        String defsJson=myJsonReader.loadJSONFromAsset(currentContext);
-        JSONObject defsJsonAsJson=null;
+        String defsJson = myJsonReader.loadJSONFromAsset(currentContext);
+        JSONObject defsJsonAsJson = null;
         try {
-             defsJsonAsJson=new JSONObject(defsJson);
+            defsJsonAsJson = new JSONObject(defsJson);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-String word;
+        String word;
         String def;
         try {
-            for(int i=0; i<defsJsonAsJson.getJSONObject("results").getJSONArray("collection1").length();i++) {
-                word=defsJsonAsJson.getJSONObject("results").getJSONArray("collection1").getJSONObject(i).getJSONObject("Word").getString("text");
-                def=defsJsonAsJson.getJSONObject("results").getJSONArray("collection1").getJSONObject(i).getString("Definition");
+            for (int i = 0; i < defsJsonAsJson.getJSONObject("results").getJSONArray("collection1").length(); i++) {
+                word = defsJsonAsJson.getJSONObject("results").getJSONArray("collection1").getJSONObject(i).getJSONObject("Word").getString("text");
+                def = defsJsonAsJson.getJSONObject("results").getJSONArray("collection1").getJSONObject(i).getString("Definition");
                 wordsList.add(word);
                 definitionsList.add(def);
-                Log.d(word,def);
+                Log.d(word, def);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         wordsAndDefs.add(wordsList);
         wordsAndDefs.add(definitionsList);
-        return null;
+        DefinitionsSingelton.getInstance().setWordsAndDefs(wordsAndDefs);
+        DefinitionsSingelton.getInstance().setDefinitionsList(definitionsList);
+        DefinitionsSingelton.getInstance().setWordsList(wordsList);
 
+        return null;
     }
 
     @Override
@@ -88,4 +73,18 @@ String word;
         super.onPostExecute(o);
         pd.dismiss();
     }
+
+    public getWordsAndDefinitionsTask(Context context) {
+        this.pd = new ProgressDialog(context);
+        this.callingActivity = context;
+    }
+
+    public ArrayList<String> getWordsList() {
+        return wordsList;
+    }
+
+    public ArrayList<String> getDefinitionsList() {
+        return definitionsList;
+    }
+
 }

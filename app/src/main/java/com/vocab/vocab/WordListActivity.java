@@ -16,7 +16,7 @@ public class WordListActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArrayList<String> words = getWordsAndDefinitionsTask.getWordsList();
+        ArrayList<String> words =      DefinitionsSingelton.getInstance().getWordsList();
         WordsListAdapter dictionaryListAdapter = new WordsListAdapter(words, this);
         setListAdapter(dictionaryListAdapter);
         setContentView(R.layout.activity_word_list);

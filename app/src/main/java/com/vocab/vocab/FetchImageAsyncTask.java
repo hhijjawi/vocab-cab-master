@@ -12,25 +12,25 @@ import java.net.URL;
 /**
  * Created by Hisham on 11/2/2015.
  */
-public class FetchImageAsyncTask extends AsyncTask{
+public class FetchImageAsyncTask extends AsyncTask {
     Context mCallingContext;
     DefinitionActivity mCallingActivity;
     String mWord;
-    public FetchImageAsyncTask(String mWord,Context mCallingContext, DefinitionActivity mCallingActivity) {
-        this.mCallingContext=mCallingContext;
 
-        this.mCallingActivity=mCallingActivity;
-        this.mWord=mWord;
+    public FetchImageAsyncTask(String mWord, Context mCallingContext, DefinitionActivity mCallingActivity) {
+        this.mCallingContext = mCallingContext;
+        this.mCallingActivity = mCallingActivity;
+        this.mWord = mWord;
     }
 
     @Override
     protected String doInBackground(Object[] params) {
-        JsonObject toRet=null;
-        toRet=Utils.queryBingForImage(mWord, mCallingContext);
-        Log.d("toREt",toRet.toString());
+        JsonObject toRet = null;
+        toRet = Utils.queryBingForImage(mWord, mCallingContext);
+        Log.d("toREt", toRet.toString());
         URL imageURL = null;
         try {
-            imageURL= Utils.parseURLFromBingJSON(toRet, Configuration.ORIENTATION_PORTRAIT);
+            imageURL = Utils.parseURLFromBingJSON(toRet, Configuration.ORIENTATION_PORTRAIT);
         } catch (Exception e) {
             e.printStackTrace();
         }
