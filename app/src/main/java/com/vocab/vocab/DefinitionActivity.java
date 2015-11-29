@@ -25,7 +25,7 @@ public class DefinitionActivity extends AppCompatActivity {
         TextView wordTextView = (TextView) findViewById(R.id.titleTextView);
         int position = getIntent().getIntExtra("Position", 1);
         String definition = DefinitionsSingelton.getInstance().getDefinitionsList().get(position);
-        ;
+
         String word = DefinitionsSingelton.getInstance().getWordsList().get(position);
         definitionTextView.setText(definition);
         wordTextView.setText(word);
