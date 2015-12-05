@@ -1,4 +1,4 @@
-package com.vocab.vocab;
+package com.vocab.vocab.Utilities;
 
 
 import android.content.Context;
@@ -11,8 +11,11 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
+import com.vocab.vocab.ModelData.Constants;
 
 import java.net.URL;
+import java.util.Random;
+
 
 /**
  * Created by jared on 4/16/15.
@@ -69,6 +72,14 @@ public class Utils {
                 = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+//From stack overflow
+    public static int randInt(int min, int max) {
+
+        Random rand=new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
     }
 }
 

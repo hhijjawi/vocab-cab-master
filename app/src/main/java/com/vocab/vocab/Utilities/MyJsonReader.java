@@ -1,4 +1,4 @@
-package com.vocab.vocab;
+package com.vocab.vocab.Utilities;
 
 import android.content.Context;
 
@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Created by Hisham on 10/5/2015.
  */
-public class myJsonReader {
+public class MyJsonReader {
     public static String loadJSONFromAsset(Context context) {
         String json = null;
         try {

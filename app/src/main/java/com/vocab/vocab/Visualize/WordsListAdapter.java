@@ -1,4 +1,4 @@
-package com.vocab.vocab;
+package com.vocab.vocab.Visualize;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,14 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.vocab.vocab.ModelData.Word;
+import com.vocab.vocab.R;
+
 import java.util.ArrayList;
 
 /**
  * Created by Hisham on 10/5/2015.
  */
 public class WordsListAdapter extends ArrayAdapter {
-    ArrayList<String> words;
-    public WordsListAdapter(ArrayList<String> words, Context context) {
+    ArrayList<Word> words;
+    public WordsListAdapter(ArrayList<Word> words, Context context) {
         super(context, 0, words);
         this.words=words;
     }
@@ -26,7 +29,7 @@ public class WordsListAdapter extends ArrayAdapter {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.dictionary_list_item, parent, false);
         }
         TextView word= (TextView) convertView.findViewById(R.id.dictionaryWord);
-        word.setText(words.get(position));
-        Log.d("word",words.get(position));
+        word.setText(words.get(position).getWord());
+        Log.d("word",words.get(position).getWord());
         return convertView;
     }}

@@ -1,4 +1,4 @@
-package com.vocab.vocab;
+package com.vocab.vocab.ModelData;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.vocab.vocab;
+package com.vocab.vocab.AsyncTasks;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
+import com.vocab.vocab.Utilities.Utils;
+import com.vocab.vocab.Visualize.DefinitionActivity;
 
 import java.net.URL;
 

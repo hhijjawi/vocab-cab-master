@@ -3,43 +3,49 @@ package com.vocab.vocab;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import com.vocab.vocab.AsyncTasks.GetWordsAndDefinitionsAsyncTask;
+import com.vocab.vocab.Verify.VerifyActivity;
+import com.vocab.vocab.Visualize.WordListActivity;
+import com.vocab.vocab.Vocalize.MusicPlayerActivity;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    private TextToSpeech tts;
+    private int numRuns=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         wireUpLayout();
-        new getWordsAndDefinitionsTask(this).execute();
-    }
-    public void wireUpLayout(){
-        Button vocalizeButton=(Button) findViewById(R.id.VocalizeButton);
-        Button visualizeButton=(Button) findViewById(R.id.VisualizeButton);
-        Button verifyButton=(Button) findViewById(R.id.VerifyButton);
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "pacifico.ttf");
-        vocalizeButton.setTypeface(typeface);
-        visualizeButton.setTypeface(typeface);
-        verifyButton.setTypeface(typeface);
-        visualizeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<ArrayList<String>> dictionary = DefinitionsSingelton.getInstance().getWordsAndDefs();
-                Intent openDictionary = new Intent(MainActivity.this, WordListActivity.class);
-                openDictionary.putExtra("dictionary", (Serializable) dictionary);
-                startActivity(openDictionary);
-            }
-        });
+        testTTS();
 
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                Log.d("Init", "Init");
+                if (status == TextToSpeech.SUCCESS) {
+                    new GetWordsAndDefinitionsAsyncTask(MainActivity.this,tts).execute();
+                }
+            }
+
+        });
+        tts.setLanguage(Locale.UK);
+        tts.setSpeechRate((float) 0.60);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -61,4 +67,65 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void wireUpLayout() {
+        Button vocalizeButton = (Button) findViewById(R.id.VocalizeButton);
+        Button visualizeButton = (Button) findViewById(R.id.VisualizeButton);
+        Button verifyButton = (Button) findViewById(R.id.VerifyButton);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "pacifico.ttf");
+        vocalizeButton.setTypeface(typeface);
+        visualizeButton.setTypeface(typeface);
+        verifyButton.setTypeface(typeface);
+        visualizeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openDictionary = new Intent(MainActivity.this, WordListActivity.class);
+                startActivity(openDictionary);
+            }
+        });
+        vocalizeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i= new Intent(MainActivity   .this, MusicPlayerActivity.class);
+                startActivity(i);
+            }
+        });
+        verifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i= new Intent(MainActivity.this, VerifyActivity.class);
+                startActivity(i);
+            }
+        });
+    }
+
+    public void testTTS() {
+         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    //I like the british accent and the cadence kind of slow
+                    tts.setLanguage(Locale.UK);
+                    tts.setSpeechRate((float) 0.60);
+                    tts.speak("hello i like cheese", TextToSpeech.QUEUE_ADD, null);
+                    HashMap<String, String> myHashRender = new HashMap();
+                    String wakeUpText = "Is this working?";
+                    String destFileName = "/wakeUp.wav";
+                    myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, wakeUpText);
+                    String exStoragePath                = getFilesDir().getAbsolutePath();
+                    Log.d("ex",exStoragePath);
+                    File appTmpPath                     = new File(exStoragePath);
+                    appTmpPath.mkdirs();
+                    String tempFilename                 = "tmpaudio.wav";
+                    String tempDestFile                 = appTmpPath.getAbsolutePath() + "/" + tempFilename;
+                    tts.synthesizeToFile(wakeUpText, myHashRender, tempDestFile);
+
+                }
+            }
+        }
+        );
+        Log.d("here", "here");
+
+    }
+
 }

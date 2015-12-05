@@ -24,7 +24,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.07"
         android:background="@drawable/yellow"
@@ -46,12 +46,12 @@
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height=" 140dp"
+        android:layout_height=" 100dp"
         android:layout_gravity="center_horizontal"
         android:weightSum="1">
 
         <ImageView
-            android:layout_width="250dp"
+            android:layout_width="275dp"
             android:layout_height="match_parent"
             android:id="@+id/imageView"
             android:layout_gravity="center"
@@ -60,13 +60,91 @@
             android:layout_alignParentRight="false"
             android:layout_alignParentLeft="false"
             android:layout_centerInParent="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="130dp"
+            android:text="Next"
+            android:id="@+id/nextButton"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_toEndOf="@+id/imageView" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="130dp"
+            android:text="Back"
+            android:id="@+id/backButton"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/imageView"
+            android:layout_toStartOf="@+id/imageView" />
+
     </RelativeLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@android:color/black"></LinearLayout>
+        android:background="@android:color/black">
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#ffffff"
+            android:id="@+id/rGroup">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:id="@+id/radioButton1"
+                android:checked="false"
+                android:background="#ffffff"
+                android:paddingLeft="3dp"
+                android:paddingRight="5dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioButton2"
+                android:checked="false"
+                android:text="2"
+                android:background="#ffffff"
+                android:paddingRight="5dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioButton3"
+                android:checked="false"
+                android:text="3"
+                android:background="#ffffff"
+                android:paddingRight="5dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioButton4"
+                android:checked="false"
+                android:text="4"
+                android:background="#ffffff"
+                android:paddingRight="5dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioButton5"
+                android:checked="false"
+                android:text="5"
+                android:background="#ffffff"
+                android:paddingRight="5dp" />
+        </RadioGroup>
+    </LinearLayout>
 
 </LinearLayout>

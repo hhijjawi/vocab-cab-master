@@ -1,10 +1,11 @@
-package com.vocab.vocab;
+package com.vocab.vocab.AsyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
+import com.vocab.vocab.Utilities.Utils;
 
 import java.net.URL;
 
@@ -32,7 +33,7 @@ public class BingImageSearchAsyncTask extends AsyncTask<String,Integer,URL> {
     protected URL doInBackground(String... query) {
 
         try{
-            JsonObject jsonResult = Utils.queryBingForImage(query[0],mContext);
+            JsonObject jsonResult = Utils.queryBingForImage(query[0], mContext);
 
             int desiredOrientation = mContext.getResources().getConfiguration().orientation;
 
