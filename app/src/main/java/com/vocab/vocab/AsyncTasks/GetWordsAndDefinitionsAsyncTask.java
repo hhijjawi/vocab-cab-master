@@ -7,7 +7,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import com.vocab.vocab.ModelData.Word;
@@ -23,7 +22,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 
@@ -37,7 +35,6 @@ public class GetWordsAndDefinitionsAsyncTask extends AsyncTask {
     ArrayList<ArrayList<String>> mWordsAndDefs = new ArrayList<ArrayList<String>>();
     ProgressDialog mPd;
     Context mCallingActivity;
-    TextToSpeech mTTS;
 
     @Override
     protected void onPreExecute() {
@@ -67,6 +64,7 @@ public class GetWordsAndDefinitionsAsyncTask extends AsyncTask {
         }
         String word;
         String def;
+
        // defsJsonAsJson.getJSONObject("results").getJSONArray("collection1").length()-1
             try {
                 for (int i = 0; i < defsJsonAsJson.getJSONObject("results").getJSONArray("collection1").length() - 1; i++) {
@@ -98,10 +96,10 @@ public class GetWordsAndDefinitionsAsyncTask extends AsyncTask {
         mPd.dismiss();
     }
 
-    public GetWordsAndDefinitionsAsyncTask(Context context, TextToSpeech mTTS,boolean isFirstTime) {
+    public GetWordsAndDefinitionsAsyncTask(Context context,boolean isFirstTime) {
         this.mPd = new ProgressDialog(context);
         this.mCallingActivity = context;
-        this.mTTS = mTTS;
+
         this.isFirstTime=isFirstTime;
     }
 
@@ -112,6 +110,8 @@ public class GetWordsAndDefinitionsAsyncTask extends AsyncTask {
     public ArrayList<String> getDefinitionsList() {
         return mDefinitionsList;
     }
+    /*
+    //This is how I got my JSON. I left it here to show you, but it's now useless. I think some it is from SO but I can't remember
     public void fetchWordAudio(final String definition, final String word){
 
         final String exStoragePath                = Environment.getExternalStorageDirectory().getAbsolutePath()+"/mp3";
@@ -125,6 +125,7 @@ public class GetWordsAndDefinitionsAsyncTask extends AsyncTask {
         final HashMap<String, String> myHashRender = new HashMap();
 
         mTTS.synthesizeToFile(defText, myHashRender, tempDestFile);}
+    */
     public void getMP3(){
 
 

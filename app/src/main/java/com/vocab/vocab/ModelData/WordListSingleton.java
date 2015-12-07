@@ -9,6 +9,11 @@ import java.util.ArrayList;
 public class WordListSingleton implements Serializable{
     private static WordListSingleton ourInstance = new WordListSingleton();
     private ArrayList<Word> wordList;
+
+    public static void setOurInstance(WordListSingleton ourInstance) {
+        WordListSingleton.ourInstance = ourInstance;
+    }
+
     public static WordListSingleton getInstance() {
         return ourInstance;
     }

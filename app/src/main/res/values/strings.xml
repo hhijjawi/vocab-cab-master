@@ -9,4 +9,9 @@
     <string name="title_activity_music_player">MusicPlayerActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="share_progress">Share Progress</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="end">end</string>
+    <string name="try_again">Try again</string>
+
 </resources>

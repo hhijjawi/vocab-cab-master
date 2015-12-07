@@ -1,12 +1,12 @@
 package com.vocab.vocab.Visualize;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,11 +21,13 @@ import com.vocab.vocab.ModelData.WordListSingleton;
 import com.vocab.vocab.R;
 import com.vocab.vocab.Utilities.Utils;
 
+import java.io.IOException;
+
 
 /**
  * Created by Hisham on 10/5/2015.
  */
-public class DefinitionActivity extends AppCompatActivity  implements SensorEventListener{
+public class DefinitionActivity extends Activity implements SensorEventListener{
     Button nextButton;
     ImageView mImageView;
     NumberPicker mFamiliarityPicker;
@@ -236,6 +238,12 @@ return;
         super.onPause();
 
         mSensorManager.unregisterListener(this);
+       try{
+                Utils.saveObject(WordListSingleton.getInstance(),this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
     }
     @Override
@@ -271,4 +279,5 @@ return;
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+
 }

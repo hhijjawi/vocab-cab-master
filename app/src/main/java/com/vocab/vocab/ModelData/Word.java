@@ -1,9 +1,11 @@
 package com.vocab.vocab.ModelData;
 
+import java.io.Serializable;
+
 /**
  * Created by Hisham on 11/29/2015.
  */
-public class Word {
+public class Word implements Serializable{
     private String mWord;
     private String mDefinition;
     private String mSampleSentence;

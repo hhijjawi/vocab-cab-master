@@ -7,13 +7,13 @@
         android:icon="@drawable/rand"
         android:orderInCategory="1"
         app:showAsAction="always"
-        android:title="Shuffle"/>
+        android:title="@string/shuffle"/>
 
     <item
         android:id="@+id/action_end"
         android:icon="@drawable/end"
         android:orderInCategory="2"
         app:showAsAction="always"
-        android:title="End"/>
+        android:title="@string/end"/>
 
 </menu>
