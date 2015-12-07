@@ -14,9 +14,9 @@ import java.net.URL;
  */
 public class BingImageSearchAsyncTask extends AsyncTask<String,Integer,URL> {
 
-    private static final String TAG = "ImageSearchAsyncTask";
     private Context mContext;
     private ImageSearchCompletionListener mCompletionListener;
+    private static final String TAG = "ImageSearchAsyncTask";
 
     public interface ImageSearchCompletionListener{
         void imageUrlFound(URL url);

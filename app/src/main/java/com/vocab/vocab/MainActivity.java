@@ -1,6 +1,7 @@
 package com.vocab.vocab;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.vocab.vocab.AsyncTasks.GetWordsAndDefinitionsAsyncTask;
+import com.vocab.vocab.ModelData.WordListSingleton;
 import com.vocab.vocab.Verify.VerifyActivity;
 import com.vocab.vocab.Visualize.WordListActivity;
 import com.vocab.vocab.Vocalize.MusicPlayerActivity;
@@ -29,21 +31,50 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         wireUpLayout();
-        testTTS();
+        final String PREFS_NAME = "MyPrefsFile";
 
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 
-            @Override
-            public void onInit(int status) {
-                Log.d("Init", "Init");
-                if (status == TextToSpeech.SUCCESS) {
-                    new GetWordsAndDefinitionsAsyncTask(MainActivity.this,tts).execute();
+        if (settings.getBoolean("my_first_time", true)) {
+            Log.d("First","First");
+
+            tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+
+                @Override
+                public void onInit(int status) {
+                    if (status == TextToSpeech.SUCCESS) {
+                        Log.d("Init", "Init");
+                        new GetWordsAndDefinitionsAsyncTask(MainActivity.this,tts,true).execute();
+
+                    }
+
                 }
-            }
 
-        });
-        tts.setLanguage(Locale.UK);
-        tts.setSpeechRate((float) 0.60);
+            });
+
+            settings.edit().putBoolean("my_first_time", false).commit();
+        }
+        else if(WordListSingleton.getInstance().getWordList().isEmpty()){
+            Log.d("truefalse","false");
+
+            tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+
+                @Override
+                public void onInit(int status) {
+                    if (status == TextToSpeech.SUCCESS) {
+                        Log.d("Init", "Init");
+                        new GetWordsAndDefinitionsAsyncTask(MainActivity.this, tts, false).execute();
+
+                    }
+
+                }
+
+            });
+        }
+//        testTTS();
+
+       // getMP3();
+
     }
 
     @Override
@@ -93,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         verifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i= new Intent(MainActivity.this, VerifyActivity.class);
+                Intent i = new Intent(MainActivity.this, VerifyActivity.class);
                 startActivity(i);
             }
         });

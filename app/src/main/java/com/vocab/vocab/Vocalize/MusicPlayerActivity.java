@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
@@ -143,11 +144,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaPlaye
 
 	//method to retrieve song info from device
 	public void getSongList(){
+		sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 		//query external audio
 		ContentResolver musicResolver = getContentResolver();
 		Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 		Log.d("tag",getFilesDir().getAbsolutePath());
-		Cursor musicCursor = musicResolver.query(musicUri, null, MediaStore.Images.Media.DATA+" like ? ", new String[] {"%/storage/emulated/0/Download%"}, null);
+		Cursor musicCursor = musicResolver.query(musicUri, null, MediaStore.Audio.Media.DATA+" like ? ", new String[] {"%"+Environment.getExternalStorageDirectory().getAbsolutePath()+"/audioFiles%"}, null);
 		//iterate over results if valid
 		if(musicCursor!=null && musicCursor.moveToFirst()){
 			//get columns
@@ -243,6 +245,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaPlaye
 		controller.setPrevNextListeners(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
 				playNext();
 			}
 		}, new View.OnClickListener() {
@@ -279,6 +282,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements MediaPlaye
 	public void onBackPressed() {
 
 		super.onBackPressed();
+		stopService(playIntent);
+		musicSrv=null;
+		System.exit(0);
 		Log.d("Pressed", "PRessed");
 	}
 

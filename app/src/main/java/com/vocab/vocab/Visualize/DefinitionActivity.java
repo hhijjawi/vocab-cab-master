@@ -1,5 +1,10 @@
 package com.vocab.vocab.Visualize;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,12 +25,24 @@ import com.vocab.vocab.Utilities.Utils;
 /**
  * Created by Hisham on 10/5/2015.
  */
-public class DefinitionActivity extends AppCompatActivity {
+public class DefinitionActivity extends AppCompatActivity  implements SensorEventListener{
     Button nextButton;
     ImageView mImageView;
-    NumberPicker familiarityPicker;
+    NumberPicker mFamiliarityPicker;
     int position;
-    int timesRun=0;
+    int mTimesRun =0;
+ 
+    private Sensor mAccelerometer;
+    SensorManager mSensorManager;
+    private int SHAKE_THRESHOLD=2000;
+    float mX;
+    float mY;
+    float mZ;
+    private float mLastX;
+    private float mLastY;
+    private float mLastZ;
+    private long mLastUpdate;
+     RadioGroup mRatingsGroupTwo;
     final int NEITHERPRESSED=0;
     final int BACKBUTTONPRESSED=1;
     final int FORWARDBUTTONPRESSED=2;
@@ -33,18 +50,22 @@ public class DefinitionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_definition_layout);
-        if(timesRun==0){
-            timesRun++;
+         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        if(mTimesRun ==0){
+            mTimesRun++;
            setPosition(getIntent().getIntExtra("Position", 1));
             Log.d("Position set to ", ""+position+" at line 38");
             loadViewAt(position,NEITHERPRESSED);
         }
 
 
+
     }
 
     public void loadViewAt(int position,int whereCalled) {
-    if(Utils.randInt(1,4)<(int)WordListSingleton.getInstance().getWordList().get(position).getFamiliarityScore()){
+    if(Utils.randInt(1,4)<(int)WordListSingleton.getInstance().getWordList().get(position).getmFamiliarityScore()){
         switch(whereCalled) {
             case NEITHERPRESSED:
                 break;
@@ -75,17 +96,18 @@ return;
 
         }
     }
-        final RadioGroup ratingsGroup= (RadioGroup)findViewById(R.id.rGroup);
-        Log.d("famScore",""+WordListSingleton.getInstance().getWordList().get(position).getFamiliarityScore());
+     final RadioGroup ratingsGroup= (RadioGroup)findViewById(R.id.rGroup);
+        mRatingsGroupTwo =ratingsGroup;
+        Log.d("famScore",""+WordListSingleton.getInstance().getWordList().get(position).getmFamiliarityScore());
 
-        switch((int)WordListSingleton.getInstance().getWordList().get(position).getFamiliarityScore()){
+        switch((int)WordListSingleton.getInstance().getWordList().get(position).getmFamiliarityScore()){
             case 0:ratingsGroup.clearCheck();
 
         }
 
         TextView definitionTextView = (TextView) findViewById(R.id.dText);
         TextView wordTextView = (TextView) findViewById(R.id.titleTextView);
-        String definition = WordListSingleton.getInstance().getWordList().get(position).getDefinition();
+        String definition = WordListSingleton.getInstance().getWordList().get(position).getmDefinition();
         String word = WordListSingleton.getInstance().getWordList().get(position).getWord();
         definitionTextView.setText(definition);
         wordTextView.setText(word);
@@ -145,7 +167,7 @@ return;
         }
 
 
-        if(ratingsGroup.getCheckedRadioButtonId()!=WordListSingleton.getInstance().getWordList().get(position).getFamiliarityScore()){
+        if(ratingsGroup.getCheckedRadioButtonId()!=WordListSingleton.getInstance().getWordList().get(position).getmFamiliarityScore()){
         ratingsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -154,33 +176,33 @@ return;
                     case 0:
                         break;
                     case R.id.radioButton1:
-                        WordListSingleton.getInstance().getWordList().get(getPosition()).setFamiliarityScore(1);
+                        WordListSingleton.getInstance().getWordList().get(getPosition()).setmFamiliarityScore(1);
                         Log.d("Loaded famscore for", "Loaded famscore for " + WordListSingleton.getInstance().getWordList().get(getPosition()).getWord() + "to 1");
 
 
                         break;
                     case R.id.radioButton2:
-                        WordListSingleton.getInstance().getWordList().get(getPosition()).setFamiliarityScore(2);
+                        WordListSingleton.getInstance().getWordList().get(getPosition()).setmFamiliarityScore(2);
                         Log.d("Loaded famscore for", "Loaded famscore for " + WordListSingleton.getInstance().getWordList().get(getPosition()).getWord() + "to 2");
 
 
 
                         break;
                     case R.id.radioButton3:
-                        WordListSingleton.getInstance().getWordList().get(getPosition()).setFamiliarityScore(3);
+                        WordListSingleton.getInstance().getWordList().get(getPosition()).setmFamiliarityScore(3);
                         Log.d("Loaded famscore for", "Loaded famscore for " + WordListSingleton.getInstance().getWordList().get(getPosition()).getWord() + "to 3");
                         ratingsGroup.clearCheck();
 
 
                         break;
                     case R.id.radioButton4:
-                        WordListSingleton.getInstance().getWordList().get(getPosition()).setFamiliarityScore(4);
+                        WordListSingleton.getInstance().getWordList().get(getPosition()).setmFamiliarityScore(4);
                         Log.d("Set famscore for", "Loaded famscore for " + WordListSingleton.getInstance().getWordList().get(getPosition()).getWord() + "to 4");
 
 
                         break;
                     case R.id.radioButton5:
-                        WordListSingleton.getInstance().getWordList().get(getPosition()).setFamiliarityScore(5);
+                        WordListSingleton.getInstance().getWordList().get(getPosition()).setmFamiliarityScore(5);
                         Log.d("Loaded famscore for", "Loaded famscore for " + getPosition() + " to 5");
 
 
@@ -201,5 +223,52 @@ return;
     public void setPosition(int position) {
         this.position = position;
     }
+    protected void onResume() {
 
+        super.onResume();
+
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+    }
+
+    protected void onPause() {
+
+        super.onPause();
+
+        mSensorManager.unregisterListener(this);
+
+    }
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
+            float[] values = event.values;
+
+            // Movement
+            mX = values[0];
+            mY = values[1];
+            mZ = values[2];
+
+
+            long actualTime = System.currentTimeMillis();
+            if ((actualTime - mLastUpdate) > 100)
+            {
+                long diffTime = (actualTime - mLastUpdate);
+                mLastUpdate = actualTime;
+
+
+
+                float speed = Math.abs(mX + mY + mZ - mLastX - mLastY - mLastZ) / diffTime * 10000;
+
+                if (speed > SHAKE_THRESHOLD) {
+                    Log.d("sensor", "shake detected w/ speed: " + speed);
+                setPosition(Utils.randInt(1, WordListSingleton.getInstance().getWordList().size()-1));
+                    loadViewAt(position,FORWARDBUTTONPRESSED);
+                    return;
+        }
+    }}}
+// stack overflow
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 }

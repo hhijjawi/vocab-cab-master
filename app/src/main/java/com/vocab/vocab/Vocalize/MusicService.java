@@ -123,7 +123,7 @@ MediaPlayer.OnCompletionListener {
 		//check if playback has reached the end of a track
 		if(player.getCurrentPosition()>0){
 			mp.reset();
-			playNext();
+			playSong();
 		}
 	}
 
