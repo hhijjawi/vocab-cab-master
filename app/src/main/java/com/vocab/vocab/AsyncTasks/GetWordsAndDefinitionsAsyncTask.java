@@ -177,4 +177,6 @@ public class GetWordsAndDefinitionsAsyncTask extends AsyncTask {
             out.close();
         }
     }
+
+
 }

@@ -58,20 +58,21 @@ public class VerifyActivity extends AppCompatActivity {
         switch (Utils.randInt(1, 3)) {
             case 1:
                 mDefinitionOne.setText(WordListSingleton.getInstance().getWordList().get(position).getmDefinition());
-                mDefinitionTwo.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, 9)).getmDefinition());
-                mDefinitionThree.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, 9)).getmDefinition());
+                mDefinitionTwo.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, WordListSingleton.getInstance().getWordList().size()-1)).getmDefinition());
+                mDefinitionThree.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, WordListSingleton.getInstance().getWordList().size()-1)).getmDefinition());
             case 2:
                 mDefinitionTwo.setText(WordListSingleton.getInstance().getWordList().get(position).getmDefinition());
-                mDefinitionTwo.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, 9)).getmDefinition());
-                mDefinitionOne.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, 9)).getmDefinition());
+                mDefinitionTwo.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, WordListSingleton.getInstance().getWordList().size()-1)).getmDefinition());
+                mDefinitionOne.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, WordListSingleton.getInstance().getWordList().size()-1)).getmDefinition());
 
             case 3:
                 mDefinitionThree.setText(WordListSingleton.getInstance().getWordList().get(position).getmDefinition());
-                mDefinitionTwo.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, 9)).getmDefinition());
-                mDefinitionOne.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, 9)).getmDefinition());
+                mDefinitionTwo.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, WordListSingleton.getInstance().getWordList().size()-1)).getmDefinition());
+                mDefinitionOne.setText(WordListSingleton.getInstance().getWordList().get(Utils.randInt(1, WordListSingleton.getInstance().getWordList().size()-1)).getmDefinition());
 
         }
         mTitleButton.setText(WordListSingleton.getInstance().getWordList().get(position).getWord());
+        final int finalPosition = position;
         mDefinitionOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,41 +86,85 @@ public class VerifyActivity extends AppCompatActivity {
                         .show();           */
                 if (
                         mDefinitionOne.getText().toString().equals(WordListSingleton.getInstance().getWordList().get(getmPosition()).getmDefinition())) {
+                    setmPosition(finalPosition +1);
+                    wireUpLayout(getmPosition());
+                }else {
+                    //new AlertDialog.Builder(mContext).setMessage("Wrong. Try Again").setIcon(R.drawable.wrong).show();
+                    final Dialog dialog = new Dialog(mContext);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.wrong);
+                    dialog.setCancelable(true);
+                    LinearLayout wrongLayout = (LinearLayout) dialog.findViewById(R.id.wrongLayout);
+                    wrongLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
                 }
-                //new AlertDialog.Builder(mContext).setMessage("Wrong. Try Again").setIcon(R.drawable.wrong).show();
-                final Dialog dialog = new Dialog(mContext);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.wrong);
-                dialog.setCancelable(true);
-                LinearLayout wrongLayout=(LinearLayout)dialog.findViewById(R.id.wrongLayout);
-                wrongLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
-
 
             }
         });
         mDefinitionTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (
+                        mDefinitionTwo.getText().toString().equals(WordListSingleton.getInstance().getWordList().get(getmPosition()).getmDefinition())) {
+                    setmPosition(finalPosition +1);
+                    wireUpLayout(getmPosition());
+                }else {
+                    //new AlertDialog.Builder(mContext).setMessage("Wrong. Try Again").setIcon(R.drawable.wrong).show();
+                    final Dialog dialog = new Dialog(mContext);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.wrong);
+                    dialog.setCancelable(true);
+                    LinearLayout wrongLayout = (LinearLayout) dialog.findViewById(R.id.wrongLayout);
+                    wrongLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
 
             }
         });
+
         mDefinitionThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (
+                        mDefinitionThree.getText().toString().equals(WordListSingleton.getInstance().getWordList().get(getmPosition()).getmDefinition())) {
+                    setmPosition(finalPosition +1);
+                    wireUpLayout(getmPosition());
+                    return;
+                }else {
+                    //new AlertDialog.Builder(mContext).setMessage("Wrong. Try Again").setIcon(R.drawable.wrong).show();
+                    final Dialog dialog = new Dialog(mContext);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.wrong);
+                    dialog.setCancelable(true);
+                    LinearLayout wrongLayout = (LinearLayout) dialog.findViewById(R.id.wrongLayout);
+                    wrongLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
 
             }
         });
+
 
 
     }
 
 
-
-
+    public void setmPosition(int mPosition) {
+        this.mPosition = mPosition;
+    }
 }

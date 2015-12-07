@@ -1,11 +1,12 @@
 package com.vocab.vocab.ModelData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Hisham on 11/29/2015.
  */
-public class WordListSingleton {
+public class WordListSingleton implements Serializable{
     private static WordListSingleton ourInstance = new WordListSingleton();
     private ArrayList<Word> wordList;
     public static WordListSingleton getInstance() {
@@ -22,4 +23,7 @@ public class WordListSingleton {
     }
 
 
+    public void setWordList(ArrayList<Word> wordList) {
+        this.wordList = wordList;
+    }
 }

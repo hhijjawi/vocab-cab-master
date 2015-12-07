@@ -1,5 +1,6 @@
 package com.vocab.vocab;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -13,12 +14,18 @@ import android.view.View;
 import android.widget.Button;
 
 import com.vocab.vocab.AsyncTasks.GetWordsAndDefinitionsAsyncTask;
+import com.vocab.vocab.ModelData.Word;
 import com.vocab.vocab.ModelData.WordListSingleton;
 import com.vocab.vocab.Verify.VerifyActivity;
 import com.vocab.vocab.Visualize.WordListActivity;
 import com.vocab.vocab.Vocalize.MusicPlayerActivity;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -31,6 +38,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         wireUpLayout();
+
+/*
+        try {
+            if(loadWList()!=null){
+    WordListSingleton.getInstance().setWordList(loadWList());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
         final String PREFS_NAME = "MyPrefsFile";
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -92,13 +110,27 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.share_progress) {
+            calculateProgress();
+            return super.onOptionsItemSelected(item);
+        }return true;}
+    public void calculateProgress(){
+        ArrayList<Word> words=WordListSingleton.getInstance().getWordList();
+        double runningSum=0;
+        double optimalSum=0;
+        for(Word word: words){
+         runningSum=runningSum+   word.getmFamiliarityScore();
+            optimalSum=optimalSum+5;
         }
+        double percentLearned=runningSum/optimalSum;
+        String shareBody = "I have learned "+ percentLearned+"% of words that show up on the GRE.";
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "My GRE Progress");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
 
-        return super.onOptionsItemSelected(item);
     }
-
     public void wireUpLayout() {
         Button vocalizeButton = (Button) findViewById(R.id.VocalizeButton);
         Button visualizeButton = (Button) findViewById(R.id.VisualizeButton);
@@ -117,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         vocalizeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i= new Intent(MainActivity   .this, MusicPlayerActivity.class);
+                Intent i = new Intent(MainActivity.this, MusicPlayerActivity.class);
                 startActivity(i);
             }
         });
@@ -153,10 +185,37 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
-        }
+         }
         );
         Log.d("here", "here");
 
     }
 
+
+    public void saveObject(Serializable ser) throws IOException {
+        FileOutputStream fos = this.openFileOutput("WordListSingleton", Context.MODE_PRIVATE);
+        ObjectOutputStream os = new ObjectOutputStream(fos);
+        os.writeObject(ser);
+        os.close();
+        fos.close();
+    }
+    /*
+    public WordList loadWList() throws IOException, ClassNotFoundException {
+        FileInputStream fis = this.openFileInput("WordListSingleton");
+        ObjectInputStream is = new ObjectInputStream(fis);
+        WordListSingleton wordListSingleton = (WordListSingleton) is.readObject();
+        is.close();
+        fis.close();
+        return wordList;
+    }*/
+/*
+    @Override
+    public void onPause(){
+        super.onPause();
+        try {
+            saveObject(WordListSingleton.getInstance().getWordList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
 }
